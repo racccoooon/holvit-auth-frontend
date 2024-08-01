@@ -3,14 +3,16 @@
     <label v-text="caption" :for="inputId" class="pb-2 font-bold" :class="{disabled: disabled, required: required}"/>
     <input
         :id="inputId"
-        class="w-full text-lg py-2 px-3 border border-gray-400 rounded-md"
+        class="w-full text-lg py-2 px-3 border border-gray-400 rounded-md focus:outline outline-2 outline-fuchsia-700"
         ref="inputRef"
         v-model="model"
+        :inputmode="inputmode"
         :maxlength="maxLength"
         :placeholder="placeholder"
         :disabled="disabled"
         :required="required"
-        :type="effectiveType"/>
+        :type="effectiveType"
+    />
     <span
         class="text-gray-500 text-sm pt-1"
         v-text="helperText"
@@ -24,9 +26,9 @@
 
 <script setup>
 import {onMounted, computed, nextTick, ref} from "vue";
-import {useId} from "../util/useId.js";
+import {useId} from "./util.js";
 
-const inputRef = ref(null)
+const inputRef = ref(null);
 
 const inputId = useId();
 
@@ -67,36 +69,42 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false,
+  },
+  inputmode: {
+    type: String,
+    default: null,
   }
-})
+});
 
 const model = defineModel({
   type: String,
   default: null,
-})
+});
 
 const hasHelperText = computed(() => {
   return !!props.helperText
-})
+});
+
 const hasErrorText = computed(() => {
   return !!props.errorText
-})
+});
+
 const effectiveType = computed(() => {
-  if (props.type == "password" && props.showPassword) {
+  if (props.type === "password" && props.showPassword) {
     return "text"
   }
   return props.type
-})
+});
 
-function focus() {
-  inputRef.value.focus()
+const focus = () => {
+  nextTick(() => inputRef.value.focus());
 }
+
+defineExpose({focus});
 
 onMounted(() => {
   if (props.autofocus) {
-    nextTick(() => {
-      focus()
-    })
+    focus();
   }
 })
 </script>

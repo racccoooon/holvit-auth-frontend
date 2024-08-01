@@ -1,6 +1,5 @@
 <script setup>
-import {computed} from "vue";
-import colors from "tailwindcss/colors.js";
+import {computed, nextTick, ref} from "vue";
 
 const props = defineProps({
   type: {
@@ -34,8 +33,29 @@ const props = defineProps({
 
 const isLink = computed(() => props.type === 'link')
 
+const buttonClass = computed(() => ({
+  'button': true,
+  [`button-${props.color}`]: true,
+  [`button-${props.size}`]: true,
+  'shaking': shaking.value,
+  'click-effect': clickEffect.value,
+}));
 
-const buttonClass = computed(() => `button button-${props.color} button-${props.size}`)
+const shaking = ref(false);
+const clickEffect = ref(false);
+
+const buttonEl = ref(null);
+
+const shake = () => {
+  shaking.value = true;
+}
+
+const focus = () => {
+  nextTick(() => buttonEl.value.focus());
+}
+
+defineExpose({shake, focus});
+
 
 /**
  * @param {MouseEvent} e
@@ -43,20 +63,35 @@ const buttonClass = computed(() => `button button-${props.color} button-${props.
 const clickHandler = (e) => {
   if (props.clickEffect) {
     e.target.style = `--effect-pos-x: ${e.offsetX}px; --effect-pos-y: ${e.offsetY}px`;
-    e.target.classList.add('click-effect');
+    clickEffect.value = true;
   }
 }
 
 const animationEndHandler = e => {
-  e.target.classList.remove('click-effect');
+  if (e.animationName === 'button-click-effect') {
+    clickEffect.value = false;
+  }
+  if (e.animationName === 'button-shaking') {
+    shaking.value = false;
+  }
 }
 
 </script>
 
 <template>
-  <button v-if="!isLink" :type="type" :class="buttonClass" v-bind="$attrs"
-          :aria-label="text" v-text="text" :disabled="disabled"
-          @click="clickHandler" @animationend="animationEndHandler" @animationcancel="animationEndHandler"/>
+  <button
+      v-if="!isLink"
+      :type="type"
+      :class="buttonClass"
+      v-bind="$attrs"
+      :aria-label="text"
+      v-text="text"
+      :disabled="disabled"
+      @click="clickHandler"
+      @animationend="animationEndHandler"
+      @animationcancel="animationEndHandler"
+      ref="buttonEl"
+  />
   <a v-else :class="buttonClass" v-bind="$attrs" v-text="text"/>
 </template>
 
@@ -75,20 +110,13 @@ const animationEndHandler = e => {
   width: 5px;
   height: 5px;
   border-radius: 20px;
-  animation: 0.5s 1 normal button-effect;
+  animation: 0.5s 1 normal button-click-effect;
   top: var(--effect-pos-y);
   left: var(--effect-pos-x);
 }
 
-@keyframes button-effect {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(20);
-  }
+.button.shaking {
+  animation: button-shaking 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 .button-primary {
@@ -142,5 +170,41 @@ const animationEndHandler = e => {
 .button-inline {
   @apply rounded-md px-2 py-1 border;
 }
+</style>
 
+<style>
+
+@keyframes button-click-effect {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(20);
+  }
+}
+
+@keyframes button-shaking {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
 </style>

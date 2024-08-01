@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vite + Vue</title>
+    <script>
+        window.auth_info = {
+            mode: 'authorize',
+            authorize: {
+                clientName: 'MegaCoolApp',
+                user: {
+                    name: 'Shark'
+                },
+                scopes: [
+                    {
+                        required: true,
+                        name: "oidc",
+                        display_name: "Login with OpenID Connect",
+                        description: "This allows the application to sign you in"
+                    },
+                    {
+                        required: false,
+                        name: "email",
+                        display_name: "Email",
+                        description: "This allows the application to see your email address",
+                    },
+                    {
+                        required: false,
+                        name: "profile",
+                        display_name: "Profile",
+                        description: "This allows the application to see your profile, including your full name and gender",
+                    },
+                    {
+                        required: false,
+                        name: "cool_stuff",
+                        display_name: "Do Cool Stuff",
+                        description: "This allows the application to do really cool stuff in your account",
+                    },
+                    {
+                        required: false,
+                        name: "amazing_stuff",
+                        display_name: "Do Amazing Stuff",
+                        description: "This allows the application to do absolutely amazing stuff in your account",
+                    }
+                ]
+            }
+        };
+    </script>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

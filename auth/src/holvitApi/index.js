@@ -8,6 +8,8 @@ const apiClient = axios.create({
     },
 });
 
+window.apiClient = apiClient;
+
 /*// Add a request interceptor
 apiClient.interceptors.request.use(
     config => {
