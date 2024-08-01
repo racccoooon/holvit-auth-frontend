@@ -92,7 +92,7 @@ const animationEndHandler = e => {
       @animationcancel="animationEndHandler"
       ref="buttonEl"
   />
-  <a v-else :class="buttonClass" v-bind="$attrs" v-text="text"/>
+  <a v-else :class="buttonClass" class="text-center" v-bind="$attrs" v-text="text"/>
 </template>
 
 <style scoped>

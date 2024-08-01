@@ -18,6 +18,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  token: {
+    type: String,
+    required: true,
+  },
+  urls: {
+    type: Object,
+    required: true,
+  },
 });
 
 const state = reactive({
@@ -25,6 +33,7 @@ const state = reactive({
 });
 
 const scopeItems = computed(() => props.scopes.map(s => ({
+  value: s.name,
   name: s.display_name,
   description: s.description,
   disabled: s.required
@@ -32,22 +41,6 @@ const scopeItems = computed(() => props.scopes.map(s => ({
 
 
 const form = ref(null);
-const submitButton = ref(null);
-
-const submit = async () => {
-  submitButton.value.focus();
-  state.submitting = true;
-  try {
-    await checkCode(state.code);
-    alert('logged in!');
-  } catch (e) {
-    submitButton.value.shake();
-    state.wrongCode = true;
-    state.code = "";
-    codeField.value.focus();
-  }
-  state.submitting = false;
-}
 
 const scrollContainer = ref(null);
 const scrollPos = useScroll(scrollContainer);
@@ -61,14 +54,15 @@ const scrollDown = () => {
 </script>
 
 <template>
-  <form class="max-h-full flex flex-col gap-6" @submit.prevent="submit" ref="form">
+  <form class="max-h-full flex flex-col gap-6" ref="form" :action="urls.grant" method="post">
+    <input type="hidden" name="token" :value="token" />
     <p class="text-lg">You are currently signed in as {{ user.name }}!</p>
-    <a href="/logout" class="text-sm text-fuchsia-800 underline">Is not you?</a>
+    <a :href="urls.logout" class="text-sm text-fuchsia-800 underline">Is not you?</a>
     <hr class="-mx-12" />
     <p class="text-lg">{{ clientName }} wants all these scopes:</p>
     <div class="scope-list rounded-2xl bg-gray-100 border-gray-200 border overflow-scroll scroll-smooth relative"
          ref="scrollContainer">
-      <BigCheckList :items="scopeItems" v-model="state.selectedScopes"/>
+      <BigCheckList :items="scopeItems" name="grant" v-model="state.selectedScopes"/>
       <Transition>
         <div class="sticky bottom-0 height-0 overflow-visible" v-if="showScrollButton">
           <button @click.prevent="scrollDown"
@@ -86,17 +80,14 @@ const scrollDown = () => {
           color="primary"
           size="large"
           :click-effect="true"
-          :disabled="state.submitting"
-          ref="submitButton"
       />
       <Button
-          type="submit"
+          type="link"
+          :href="urls.refuse"
           text="No thank"
           color="danger"
           size="large"
           :click-effect="true"
-          :disabled="state.submitting"
-          ref="submitButton"
       />
     </div>
   </form>

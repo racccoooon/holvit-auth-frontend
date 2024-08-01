@@ -2,10 +2,14 @@
 
 import {useId} from "./util";
 
-const props = defineProps({
+defineProps({
   items: {
     type: Array,
-    default: [],
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
   }
 });
 
@@ -24,11 +28,14 @@ const idPrefix = useId();
     <div v-for="(item, index) in items" class="p-4 border-gray-200 border-b last:border-b-0 grid">
       <input
           type="checkbox"
+          :name="name"
+          :value="item.value"
           :id="`${idPrefix}-${index}`"
           :disabled="item.disabled"
           v-model="model[index]"
           class="row-start-1 row-span-2 col-start-1 w-max place-self-center cursor-pointer"
       />
+      <input type="hidden" :name="name" :value="item.value" v-if="item.disabled" />
       <label class="text-lg text-fuchsia-800 row-start-1 col-start-2 cursor-pointer" :for="`${idPrefix}-${index}`">{{
           item.name
         }}</label>
