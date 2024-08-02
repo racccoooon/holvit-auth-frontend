@@ -60,7 +60,7 @@ const scrollDown = () => {
     <a :href="urls.logout" class="text-sm text-fuchsia-800 underline">Is not you?</a>
     <hr class="-mx-12" />
     <p class="text-lg">{{ clientName }} wants all these scopes:</p>
-    <div class="scope-list rounded-2xl bg-gray-100 border-gray-200 border overflow-scroll scroll-smooth relative"
+    <div class="scope-list rounded-2xl bg-gray-100 border-gray-200 border overflow-auto scroll-smooth relative"
          ref="scrollContainer">
       <BigCheckList :items="scopeItems" name="grant" v-model="state.selectedScopes"/>
       <Transition>
