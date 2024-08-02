@@ -1,32 +1,68 @@
 <script setup>
 
-import UsernamePassword from "./UsernamePassword.vue";
+import Device from "./Device.vue";
+import Password from "./Password.vue";
 import Totp from "./Totp.vue";
 import {computed, ref} from "vue";
+import {get, set} from "@vueuse/core";
 
-const flow = ['username-password', 'totp']
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
+  }
+})
 
-const flow_pos = ref(0);
+const stage = ref('password')
+const loginResponse = ref(null)
 
-const stage = computed(() => flow[flow_pos.value]);
+const advance = (response) => {
 
-const advance = () => {
-  if (flow_pos.value < flow.length - 1) {
-    flow_pos.value++;
-  } else {
-    final_submit();
+  switch (stage.value) {
+    case 'password':
+      set(loginResponse, response)
+        
+      if (get(loginResponse).require_totp) {
+        stage.value = 'totp'
+      } else {
+        stage.value = 'submit'
+      }
+
+      break
+
+    case 'totp':
+      if (loginResponse.value.new_device) {
+        stage.value = 'device'
+      } else {
+        stage.value = 'submit'
+      }
+      
+      break
+
+    case 'device':
+      stage.value = 'submit'
+      break
+
+    case 'submit':
+      final_submit()
+      break
   }
 }
 
 const final_submit = () => {
-  alert('submitting');
+  alert('submitting')
 }
+
+const urls = computed(() => ({
+  register: props.data.register_url,
+}))
 
 </script>
 
 <template>
-  <UsernamePassword v-if="stage === 'username-password'" @success="advance"/>
-  <Totp v-if="stage === 'totp'" @success="advance"/>
+  <Password v-if="stage === 'password'" @success="advance" :token="data.token" :urls="urls" :show-remember-me="data.use_remember_me"/>
+  <Totp v-if="stage === 'totp'" @success="advance" :urls="urls"/>
+  <Device v-if="stage === 'device'" @success="advance" :token="data.token" :urls="urls"/>
 </template>
 
 <style scoped>

@@ -97,7 +97,7 @@ const animationEndHandler = e => {
 
 <style scoped>
 .button {
-  @apply transition-colors ;
+  @apply transition-colors;
   position: relative;
   overflow: hidden;
   --effect-color: white;

@@ -11,7 +11,7 @@ const props = defineProps({
     type: Object,
     required: true,
   }
-});
+})
 
 const urls = computed(() => ({
   grant: props.data.grant_url,

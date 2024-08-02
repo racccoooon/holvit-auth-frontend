@@ -12,6 +12,7 @@
                 user: {
                     name: 'Shark'
                 },
+                token: "abc",
                 scopes: [
                     {
                         required: true,
@@ -44,7 +45,12 @@
                         description: "This allows the application to do absolutely amazing stuff in your account",
                     }
                 ]
-            }
+            },
+            authenticate: {
+                client_name: 'MegaCoolApp',
+                token: "abc",
+                use_remember_me: true,
+            },
         };
     </script>
 </head>

@@ -1,11 +1,25 @@
 <script setup>
 
 // import TextInput from "../components/TextInput.vue";
-import {TextInput, Heading, Button, Checkbox} from "holvit-components";
+import {TextInput, Heading, Button, Checkbox, Alert} from "holvit-components";
 import {reactive, ref} from "vue";
 
-const emit = defineEmits(['success']);
+const props = defineProps({
+  token: {
+    type: String,
+    required: true,
+  },
+  showRememberMe: {
+    type: Boolean,
+    required: true,
+  },
+  urls: {
+    type: Object,
+    required: true,
+  }
+})
 
+const emit = defineEmits(['success']);
 
 const state = reactive({
   username: "",
@@ -21,7 +35,12 @@ const checkCredentials = (username, password) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (username === 'admin' && password === 'admin') {
-        resolve();
+        resolve({
+          success: true,
+          require_totp: true,
+          token: "abc",
+          new_device: true,
+        });
       } else {
         reject();
       }
@@ -32,29 +51,31 @@ const checkCredentials = (username, password) => {
 
 const submit = async () => {
   state.submitting = true;
+  
   try {
-    await checkCredentials(state.username.trim(), state.password);
-    emit('success');
+    const response = await checkCredentials(state.username.trim(), state.password);
+    emit('success', response);
   } catch (e) {
     state.wrongLogin = true;
     state.password = "";
+
     submitButton.value.shake();
     passwordInput.value.focus();
+  } finally {
+    state.submitting = false;
   }
-  state.submitting = false;
 }
 </script>
 
 <template>
   <form class="flex flex-col gap-6" @submit.prevent="submit">
-    <Heading class="font-bold text-center">Admin login</Heading>
-    <p class="text-orange-700" :class="{'invisible': !state.wrongLogin}">
-      Wrong username or password!!!!!1!
-    </p>
+    <Heading class="font-bold text-center">Login</Heading>
+    <Alert color="danger" :hidden="!state.wrongLogin">
+      Password or username is wrong
+    </Alert>
     <TextInput
         v-model="state.username"
-        caption="Username"
-        placeholder="Enter your user name"
+        caption="Email or username"
         :max-length="20"
         :autofocus="true"
         :required="true"
@@ -69,9 +90,10 @@ const submit = async () => {
         ref="passwordInput"
     />
     <Checkbox
-      v-model="state.remember"
-      caption="Rember me pls"
-      :disabled="state.submitting"
+        v-if="showRememberMe"
+        v-model="state.remember"
+        caption="Remember me"
+        :disabled="state.submitting"
     />
     <Button
         type="submit"
@@ -83,8 +105,8 @@ const submit = async () => {
         ref="submitButton"
     />
     <div class="flex flex-row flex-wrap gap-4 justify-between">
-      <a href="/password-forgor" class="text-sm text-fuchsia-800 underline">Did you forgor your password?</a>
-      <a href="/password-forgor" class="text-sm text-fuchsia-800 underline">make an account? ><</a>
+      <a href="/password-forgor" class="text-sm text-fuchsia-800 underline">Forgot password?</a>
+      <a href="" class="text-sm text-fuchsia-800 underline">Don't have an account?</a>
     </div>
   </form>
 </template>
