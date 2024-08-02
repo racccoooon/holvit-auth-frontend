@@ -4,7 +4,6 @@ import Device from "./Device.vue";
 import Password from "./Password.vue";
 import Totp from "./Totp.vue";
 import {computed, ref} from "vue";
-import {get, set} from "@vueuse/core";
 
 const props = defineProps({
   data: {
@@ -20,9 +19,8 @@ const advance = (response) => {
 
   switch (stage.value) {
     case 'password':
-      set(loginResponse, response)
-        
-      if (get(loginResponse).require_totp) {
+      loginResponse.value = response
+      if (loginResponse.value.require_totp) {
         stage.value = 'totp'
       } else {
         stage.value = 'submit'
@@ -36,7 +34,7 @@ const advance = (response) => {
       } else {
         stage.value = 'submit'
       }
-      
+
       break
 
     case 'device':
@@ -60,7 +58,8 @@ const urls = computed(() => ({
 </script>
 
 <template>
-  <Password v-if="stage === 'password'" @success="advance" :token="data.token" :urls="urls" :show-remember-me="data.use_remember_me"/>
+  <Password v-if="stage === 'password'" @success="advance" :token="data.token" :urls="urls"
+            :show-remember-me="data.use_remember_me"/>
   <Totp v-if="stage === 'totp'" @success="advance" :urls="urls"/>
   <Device v-if="stage === 'device'" @success="advance" :token="data.token" :urls="urls"/>
 </template>

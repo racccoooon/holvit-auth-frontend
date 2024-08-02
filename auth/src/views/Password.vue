@@ -3,6 +3,8 @@
 // import TextInput from "../components/TextInput.vue";
 import {TextInput, Heading, Button, Checkbox, Alert} from "holvit-components";
 import {reactive, ref} from "vue";
+import authApi from "../holvitApi/authApi.js";
+
 
 const props = defineProps({
   token: {
@@ -31,30 +33,22 @@ const state = reactive({
 const submitButton = ref(null);
 const passwordInput = ref(null);
 
-const checkCredentials = (username, password) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (username === 'admin' && password === 'admin') {
-        resolve({
-          success: true,
-          require_totp: true,
-          token: "abc",
-          new_device: true,
-        });
-      } else {
-        reject();
-      }
-    }, 500);
-  });
+const checkCredentials = async (username, password) => {
+  try {
+    return await authApi.verifyPassword(username, password, props.token);
+  }
+  catch (e) {
+    //TODO: error handling other than 401
+    console.log("error: ", e);
+  }
 };
-
 
 const submit = async () => {
   state.submitting = true;
   
   try {
     const response = await checkCredentials(state.username.trim(), state.password);
-    emit('success', response);
+    emit('success', response.data);
   } catch (e) {
     state.wrongLogin = true;
     state.password = "";

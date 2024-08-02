@@ -1,9 +1,9 @@
 import apiClient from './index';
 
 const authApi = {
-    auth_step(token, type, credentials) {
-        return apiClient.post('/authenticate', {
-            token, type, credentials
+    verifyPassword(username, password, token) {
+        return apiClient.post('/api/auth/verify-password', {
+            username, password, token
         });
     },
 };

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_HOLVIT_API_BASE_URL,
-    timeout: 10000, // Request timeout
+    timeout: 1000000, // Request timeout
     headers: {
         'Content-Type': 'application/json',
     },
