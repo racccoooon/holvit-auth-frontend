@@ -22,6 +22,8 @@ const advance = (response) => {
       loginResponse.value = response
       if (loginResponse.value.require_totp) {
         stage.value = 'totp'
+      } else if (loginResponse.value.new_device) {
+        stage.value = 'device'
       } else {
         stage.value = 'submit'
       }

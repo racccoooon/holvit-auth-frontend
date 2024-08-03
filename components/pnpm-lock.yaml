@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      uuid:
+        specifier: ^10.0.0
+        version: 10.0.0
       vue:
         specifier: ^3.4.31
         version: 3.4.34
@@ -485,6 +488,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
 
   vue@3.4.34:
     resolution: {integrity: sha512-VZze05HWlA3ItreQ/ka7Sx7PoD0/3St8FEiSlSTVgb6l4hL+RjtP2/8g5WQBzZgyf8WG2f+g1bXzC7zggLhAJA==}
@@ -980,6 +987,8 @@ snapshots:
   ts-interface-checker@0.1.13: {}
 
   util-deprecate@1.0.2: {}
+
+  uuid@10.0.0: {}
 
   vue@3.4.34:
     dependencies:
