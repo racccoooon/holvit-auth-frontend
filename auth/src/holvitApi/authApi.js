@@ -1,5 +1,5 @@
 import apiClient from './index';
-import {useDeviceId} from 'components/src/util.js'
+import {useDeviceId} from '../util.js'
 
 const authApi = {
     verifyPassword(username, password, token) {
