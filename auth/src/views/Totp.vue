@@ -11,18 +11,9 @@ const state = reactive({
   wrongCode: false,
 });
 
-const rules = computed(() => ({
-  code: {
-    required
-  },
-}));
-
 const form = ref(null);
 const submitButton = ref(null);
 const codeField = ref(null);
-
-const v$ = useVuelidate(rules, state)
-
 
 const checkCode = (code) => {
   return new Promise((resolve, reject) => {

@@ -1,15 +1,13 @@
 <script setup>
 import {TextInput, Heading, Button, Checkbox, Alert} from "holvit-components";
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import authApi from "../holvitApi/authApi.js";
+import {useVuelidate} from "@vuelidate/core";
+import {sameAs} from "@vuelidate/validators";
 
 const props = defineProps({
   token: {
     type: String,
-    required: true,
-  },
-  showRememberMe: {
-    type: Boolean,
     required: true,
   },
   urls: {
@@ -23,22 +21,44 @@ const emit = defineEmits(['success']);
 const state = reactive({
   username: "",
   password: "",
+  newPassword: "",
+  confirmNewPassword: "",
   submitting: false,
   wrongLogin: false,
 });
 
+const rules = computed(() => ({
+  newPassword: {
+    sameAs: sameAs(computed(() => state.confirmNewPassword)),
+  },
+}));
+
 const submitButton = ref(null);
 const passwordInput = ref(null);
+const newPasswordInput = ref(null);
+
+const v$ = useVuelidate(rules, state)
 
 const submit = async () => {
   state.submitting = true;
-  
+
   try {
-    const response = await authApi.verifyPassword(state.username.trim(), state.password, props.token) 
+    if (!await v$.value.$validate()) {
+      submitButton.value.shake();
+      newPasswordInput.value.focus()
+      return
+    }
+    
+    const response = await authApi.resetPassword(
+        state.username.trim(), state.password, state.newPassword, props.token);
     emit('success', response.data);
   } catch (e) {
+    console.log(e) //TODO: error handling
+    
     state.wrongLogin = true;
     state.password = "";
+    state.newPassword = "";
+    state.confirmNewPassword = "";
 
     submitButton.value.shake();
     passwordInput.value.focus();
@@ -51,6 +71,9 @@ const submit = async () => {
 <template>
   <form class="flex flex-col gap-6" @submit.prevent="submit">
     <Heading class="font-bold text-center">Login</Heading>
+    <Alert color="primary">
+      Your current password is temporary. Please update it to a new password.
+    </Alert>
     <Alert color="danger" :hidden="!state.wrongLogin">
       Password or username is wrong.
     </Alert>
@@ -69,25 +92,31 @@ const submit = async () => {
         :required="true"
         ref="passwordInput"
     />
-    <Checkbox
-        v-if="showRememberMe"
-        v-model="state.remember"
-        caption="Remember me"
+    <TextInput
+        v-model="state.newPassword"
+        caption="New password"
+        type="password"
         :disabled="state.submitting"
+        :required="true"
+        :error-text="v$.newPassword.$errors[0]?.$message"
+        ref="newPasswordInput"
+    />
+    <TextInput
+        v-model="state.confirmNewPassword"
+        caption="Confirm new password"
+        type="password"
+        :disabled="state.submitting"
+        :required="true"
     />
     <Button
         type="submit"
-        text="Login"
+        text="Reset password"
         color="primary"
         size="large"
         :click-effect="true"
         :disabled="state.submitting"
         ref="submitButton"
     />
-    <div class="flex flex-row flex-wrap gap-4 justify-between">
-      <a href="/password-forgor" class="text-sm text-fuchsia-800 underline">Forgot password?</a>
-      <a href="" class="text-sm text-fuchsia-800 underline">Don't have an account?</a>
-    </div>
   </form>
 </template>
 

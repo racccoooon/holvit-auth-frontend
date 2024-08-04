@@ -4,6 +4,9 @@ import Device from "./Device.vue";
 import Password from "./Password.vue";
 import Totp from "./Totp.vue";
 import {computed, ref} from "vue";
+import ResetPassword from "./ResetPassword.vue";
+import VerifyEmail from "./VerifyEmail.vue";
+import TotpOnboarding from "./TotpOnboarding.vue";
 
 const props = defineProps({
   data: {
@@ -12,40 +15,15 @@ const props = defineProps({
   }
 })
 
-const stage = ref('password')
-const loginResponse = ref(null)
+const stage = ref('verify_password')
+stage.value = "totp_onboarding"
 
 const advance = (response) => {
 
-  switch (stage.value) {
-    case 'password':
-      loginResponse.value = response
-      if (loginResponse.value.require_totp) {
-        stage.value = 'totp'
-      } else if (loginResponse.value.new_device) {
-        stage.value = 'device'
-      } else {
-        stage.value = 'submit'
-      }
+  stage.value = response.next_step
 
-      break
-
-    case 'totp':
-      if (loginResponse.value.new_device) {
-        stage.value = 'device'
-      } else {
-        stage.value = 'submit'
-      }
-
-      break
-
-    case 'device':
-      stage.value = 'submit'
-      break
-
-    case 'submit':
-      final_submit()
-      break
+  if (stage.value === 'submit') {
+    final_submit()
   }
 }
 
@@ -60,10 +38,13 @@ const urls = computed(() => ({
 </script>
 
 <template>
-  <Password v-if="stage === 'password'" @success="advance" :token="data.token" :urls="urls"
+  <Password v-if="stage === 'verify_password'" @success="advance" :token="data.token" :urls="urls"
             :show-remember-me="data.use_remember_me"/>
-  <Totp v-if="stage === 'totp'" @success="advance" :urls="urls"/>
-  <Device v-if="stage === 'device'" @success="advance" :token="data.token" :urls="urls"/>
+  <ResetPassword v-if="stage === 'reset_password'" @success="advance" :token="data.token" :urls="urls"/>
+  <VerifyEmail v-if="stage === 'verify_email'" :token="data.token" :urls="urls"/>
+  <TotpOnboarding v-if="stage === 'totp_onboarding'" @success="advance" :token="data.token" :urls="urls"/>
+  <Totp v-if="stage === 'verify_totp'" @success="advance" :urls="urls"/>
+  <Device v-if="stage === 'verify_device'" @success="advance" :token="data.token" :urls="urls"/>
 </template>
 
 <style scoped>
