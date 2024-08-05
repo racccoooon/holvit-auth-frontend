@@ -2,14 +2,14 @@ import apiClient from './index';
 import {useDeviceId} from '../util.js'
 
 const authApi = {
-    verifyPassword(username, password, token) {
+    verifyPassword(username, password, rememberMe, token) {
         return apiClient.post('/api/auth/verify-password', {
-            username, password, token,
+            username, password, remember_me: rememberMe, token,
         });
     },
-    resetPassword(username, password, newPassword, token) {
+    resetPassword(password, newPassword, token) {
         return apiClient.post('/api/auth/reset-password', {
-            username, password, new_password: newPassword, token,
+            password, new_password: newPassword, token,
         })
     },
     getOnboardingTotp(token) {
@@ -26,7 +26,7 @@ const authApi = {
         return apiClient.post('/api/auth/verify-device', {
             code, token,
         })
-    }
+    },
 };
 
 export default authApi;

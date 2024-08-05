@@ -16,19 +16,32 @@ const props = defineProps({
 })
 
 const stage = ref('verify_password')
-stage.value = "totp_onboarding"
 
 const advance = (response) => {
 
   stage.value = response.next_step
 
   if (stage.value === 'submit') {
-    final_submit()
+     final_submit()
   }
 }
 
 const final_submit = () => {
-  alert('submitting')
+  const form = document.createElement('form');
+
+  form.method = 'POST';
+  //TODO: get from urls
+  form.action = import.meta.env.VITE_HOLVIT_API_BASE_URL + '/api/auth/login';
+
+  const tokenInput = document.createElement('input');
+  tokenInput.type = 'hidden';
+  tokenInput.name = 'token';
+  tokenInput.value = props.data.token;
+  form.appendChild(tokenInput);
+
+  document.body.appendChild(form);
+
+  form.submit();
 }
 
 const urls = computed(() => ({

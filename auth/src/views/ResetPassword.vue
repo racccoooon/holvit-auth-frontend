@@ -19,7 +19,6 @@ const props = defineProps({
 const emit = defineEmits(['success']);
 
 const state = reactive({
-  username: "",
   password: "",
   newPassword: "",
   confirmNewPassword: "",
@@ -50,7 +49,7 @@ const submit = async () => {
     }
     
     const response = await authApi.resetPassword(
-        state.username.trim(), state.password, state.newPassword, props.token);
+        state.password, state.newPassword, props.token);
     emit('success', response.data);
   } catch (e) {
     console.log(e) //TODO: error handling
@@ -78,15 +77,9 @@ const submit = async () => {
       Password or username is wrong.
     </Alert>
     <TextInput
-        v-model="state.username"
-        caption="Email or username"
-        :autofocus="true"
-        :required="true"
-        :disabled="state.submitting"
-    />
-    <TextInput
         v-model="state.password"
         caption="Password"
+        :autofocus="true"
         type="password"
         :disabled="state.submitting"
         :required="true"

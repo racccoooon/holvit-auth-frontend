@@ -23,6 +23,7 @@ const emit = defineEmits(['success']);
 const state = reactive({
   username: "",
   password: "",
+  rememberMe: false,
   submitting: false,
   wrongLogin: false,
 });
@@ -34,7 +35,8 @@ const submit = async () => {
   state.submitting = true;
   
   try {
-    const response = await authApi.verifyPassword(state.username.trim(), state.password, props.token) 
+    const response = await authApi.verifyPassword(
+        state.username.trim(), state.password, state.rememberMe, props.token) 
     emit('success', response.data);
   } catch (e) {
     state.wrongLogin = true;
@@ -71,7 +73,7 @@ const submit = async () => {
     />
     <Checkbox
         v-if="showRememberMe"
-        v-model="state.remember"
+        v-model="state.rememberMe"
         caption="Remember me"
         :disabled="state.submitting"
     />
