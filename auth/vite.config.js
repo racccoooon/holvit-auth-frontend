@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [vue(), vueDevTools()],
   build: {
     manifest: true,
-    assetsDir: 'static',
+    assetsDir: '',
     rollupOptions: {
       input: 'auth.html'
     }
