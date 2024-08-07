@@ -1,5 +1,4 @@
 import apiClient from './index';
-import {useDeviceId} from '../util.js'
 
 const authApi = {
     verifyPassword(username, password, rememberMe, token) {
@@ -7,15 +6,15 @@ const authApi = {
             username, password, remember_me: rememberMe, token,
         });
     },
-    resetPassword(password, newPassword, token) {
+    resetPassword(newPassword, token) {
         return apiClient.post('/api/auth/reset-password', {
-            password, new_password: newPassword, token,
+            new_password: newPassword, token,
         })
     },
     getOnboardingTotp(token) {
         return apiClient.post('/api/auth/get-onboarding-totp', {
             token,
-        })  
+        })
     },
     verifyTotp(code, token) {
         return apiClient.post('/api/auth/verify-totp', {

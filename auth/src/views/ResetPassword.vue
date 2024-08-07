@@ -1,5 +1,5 @@
 <script setup>
-import {TextInput, Heading, Button, Checkbox, Alert} from "holvit-components";
+import {TextInput, Heading, Button, Alert} from "holvit-components";
 import {computed, reactive, ref} from "vue";
 import authApi from "../holvitApi/authApi.js";
 import {useVuelidate} from "@vuelidate/core";
@@ -19,7 +19,6 @@ const props = defineProps({
 const emit = defineEmits(['success']);
 
 const state = reactive({
-  password: "",
   newPassword: "",
   confirmNewPassword: "",
   submitting: false,
@@ -33,7 +32,6 @@ const rules = computed(() => ({
 }));
 
 const submitButton = ref(null);
-const passwordInput = ref(null);
 const newPasswordInput = ref(null);
 
 const v$ = useVuelidate(rules, state)
@@ -48,19 +46,16 @@ const submit = async () => {
       return
     }
     
-    const response = await authApi.resetPassword(
-        state.password, state.newPassword, props.token);
+    const response = await authApi.resetPassword(state.newPassword, props.token);
     emit('success', response.data);
   } catch (e) {
     console.log(e) //TODO: error handling
-    
-    state.wrongLogin = true;
-    state.password = "";
+
     state.newPassword = "";
     state.confirmNewPassword = "";
 
     submitButton.value.shake();
-    passwordInput.value.focus();
+    newPasswordInput.value.focus();
   } finally {
     state.submitting = false;
   }
@@ -73,18 +68,6 @@ const submit = async () => {
     <Alert color="primary">
       Your current password is temporary. Please update it to a new password.
     </Alert>
-    <Alert color="danger" :hidden="!state.wrongLogin">
-      Password or username is wrong.
-    </Alert>
-    <TextInput
-        v-model="state.password"
-        caption="Password"
-        :autofocus="true"
-        type="password"
-        :disabled="state.submitting"
-        :required="true"
-        ref="passwordInput"
-    />
     <TextInput
         v-model="state.newPassword"
         caption="New password"
@@ -103,7 +86,7 @@ const submit = async () => {
     />
     <Button
         type="submit"
-        text="Reset password"
+        text="Change password"
         color="primary"
         size="large"
         :click-effect="true"
