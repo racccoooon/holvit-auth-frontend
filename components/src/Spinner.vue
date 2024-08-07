@@ -34,6 +34,8 @@ const svgSize = computed(() => sizes[props.size])
 </script>
 
 <template>
+  <!-- from https://github.com/n3r4zzurr0/svg-spinners -->
+  <!-- TODO: either correctly attribute or completely rewrite from scratch -->
   <svg :width="svgSize" :height="svgSize" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
        v-if="type === 'circle'" v-bind="$attrs">
     <g class="spinner-ring">
