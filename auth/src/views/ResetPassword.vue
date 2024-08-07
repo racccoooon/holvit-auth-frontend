@@ -69,6 +69,7 @@ const submit = async () => {
       Your current password is temporary. Please update it to a new password.
     </Alert>
     <TextInput
+        :autofocus="true"
         v-model="state.newPassword"
         caption="New password"
         type="password"

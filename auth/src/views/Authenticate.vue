@@ -7,6 +7,7 @@ import {computed, ref} from "vue";
 import ResetPassword from "./ResetPassword.vue";
 import VerifyEmail from "./VerifyEmail.vue";
 import TotpOnboarding from "./TotpOnboarding.vue";
+import {Spinner} from 'holvit-components'
 
 const props = defineProps({
   data: {
@@ -19,19 +20,20 @@ const stage = ref('verify_password')
 
 const advance = (response) => {
 
-  stage.value = response.next_step
+  stage.value = response.nextStep
 
   if (stage.value === 'submit') {
-     final_submit()
+     finalSubmit()
   }
 }
 
-const final_submit = () => {
+const finalSubmit = () => {
   const form = document.createElement('form');
 
   form.method = 'POST';
   //TODO: get from urls
-  form.action = import.meta.env.VITE_HOLVIT_API_BASE_URL + '/api/auth/login';
+  form.action = props.data.loginCompleteUrl;
+  form.style = 'display: none';
 
   const tokenInput = document.createElement('input');
   tokenInput.type = 'hidden';
@@ -45,19 +47,22 @@ const final_submit = () => {
 }
 
 const urls = computed(() => ({
-  register: props.data.register_url,
+  register: props.data.registerUrl,
 }))
 
 </script>
 
 <template>
   <Password v-if="stage === 'verify_password'" @success="advance" :token="data.token" :urls="urls"
-            :show-remember-me="data.use_remember_me"/>
+            :show-remember-me="data.useRememberMe"/>
   <ResetPassword v-if="stage === 'reset_password'" @success="advance" :token="data.token" :urls="urls"/>
   <VerifyEmail v-if="stage === 'verify_email'" :token="data.token" :urls="urls"/>
   <TotpOnboarding v-if="stage === 'totp_onboarding'" @success="advance" :token="data.token" :urls="urls"/>
   <Totp v-if="stage === 'verify_totp'" @success="advance" :urls="urls"/>
   <Device v-if="stage === 'verify_device'" @success="advance" :token="data.token" :urls="urls"/>
+  <div class="grid place-items-center" v-if="stage === 'submit'">
+  <Spinner type="dots" size="lg" />
+  </div>
 </template>
 
 <style scoped>

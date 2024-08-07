@@ -17,7 +17,6 @@ const alertClass = computed(() => ({
 </script>
 
 <template>
-
   <p :class="alertClass" v-bind="$attrs">
     <slot/>
   </p>

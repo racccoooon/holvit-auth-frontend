@@ -17,7 +17,7 @@ import Authorize from "./views/Authorize.vue";
 import {ref} from "vue";
 
 
-const {mode, authenticate, authorize} = window.auth_info;
+const {mode, authenticate, authorize} = window.authInfo;
 
 const show_selector = typeof mode === 'undefined' && import.meta.env.VITE_SHOW_MODE_SELECTOR === 'true';
 

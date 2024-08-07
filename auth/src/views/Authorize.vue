@@ -1,5 +1,5 @@
 <template>
-  <Grant :scopes="data.scopes" :client-name="data.client_name" :user="data.user" :token="data.token" :urls="urls"/>
+  <Grant :scopes="data.scopes" :client-name="data.clientName" :user="data.user" :token="data.token" :urls="urls"/>
 </template>
 
 <script setup>
@@ -14,9 +14,9 @@ const props = defineProps({
 })
 
 const urls = computed(() => ({
-  grant: props.data.grant_url,
-  refuse: props.data.refuse_url,
-  logout: props.data.logout_url,
+  grant: props.data.grantUrl,
+  refuse: props.data.refuseUrl,
+  logout: props.data.logoutUrl,
 }))
 
 </script>
