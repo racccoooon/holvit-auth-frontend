@@ -1,5 +1,5 @@
 {
-  "name": "holvit-frontend-authorize",
+  "name": "holvit-frontend-admin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,18 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.31",
+    "vue": "^3.4.35",
     "holvit-components": "link:../components",
-    "@vuelidate/core": "^2.0.3",
-    "@vuelidate/validators": "^2.0.4",
-    "@vueuse/core": "^10.11.0",
-    "axios": "^1.7.2",
-    "qrcode": "^1.5.3",
-    "uuid": "^10.0.0"
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.4",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "vite": "^5.4.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
