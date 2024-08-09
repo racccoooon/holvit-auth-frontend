@@ -1,8 +1,9 @@
 <script setup>
+
 </script>
 
 <template>
-  <router-view v-slot="{ Component }"></router-view>
+<p>not found</p>
 </template>
 
 <style scoped>

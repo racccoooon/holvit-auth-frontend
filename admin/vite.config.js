@@ -10,11 +10,11 @@ export default defineConfig({
     manifest: true,
     assetsDir: '',
     rollupOptions: {
-      input: 'admin.html'
+      input: 'index.html'
     }
   },
   server: {
-    open: 'admin.html',
+    open: 'index.html',
     port: 5174
   }
 

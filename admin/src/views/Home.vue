@@ -1,8 +1,9 @@
 <script setup>
+
 </script>
 
 <template>
-  <router-view v-slot="{ Component }"></router-view>
+<p class="bg-red-300">home</p>
 </template>
 
 <style scoped>
