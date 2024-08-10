@@ -22,8 +22,8 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: 'default',
-    validator: (value) => ['inline', 'default', 'large'].includes(value),
+    default: 'md',
+    validator: (value) => ['inline', 'sm', 'md', 'lg'].includes(value),
   },
   clickEffect: {
     type: Boolean,
@@ -159,11 +159,15 @@ const animationEndHandler = e => {
   color: color-mix(in srgb, theme('colors.red.900') 70%, white);
 }
 
-.button-default {
+.button-sm {
+  @apply uppercase rounded p-2 border-2 font-bold;
+}
+
+.button-md {
   @apply uppercase rounded-lg p-3 border-2 font-bold;
 }
 
-.button-large {
+.button-lg {
   @apply uppercase rounded-xl p-4 border-2 font-bold text-xl;
 }
 

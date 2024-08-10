@@ -11,12 +11,15 @@ importers:
       holvit-components:
         specifier: link:../components
         version: link:../components
-      pinia:
-        specifier: ^2.2.1
-        version: 2.2.1(vue@3.4.37)
       oidc-client-ts:
         specifier: ^3.0.1
         version: 3.0.1
+      pinia:
+        specifier: ^2.2.1
+        version: 2.2.1(vue@3.4.37)
+      raccoon-eventhub:
+        specifier: ^1.0.1
+        version: 1.0.1
       vue:
         specifier: ^3.4.35
         version: 3.4.37
@@ -1070,6 +1073,9 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  raccoon-eventhub@1.0.1:
+    resolution: {integrity: sha512-GbnKgN3N3wBE47/6UhruX4QiMPwvxBSXTBeQP2paGYgBAL3b0+Lb8w9k5usHSRDqjd+YGA5ZtAqgNNjrPoGY2w==}
 
   read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
@@ -2274,6 +2280,8 @@ snapshots:
       source-map-js: 1.2.0
 
   queue-microtask@1.2.3: {}
+
+  raccoon-eventhub@1.0.1: {}
 
   read-cache@1.0.0:
     dependencies:
