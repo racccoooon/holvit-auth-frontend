@@ -1,8 +1,8 @@
 <script setup>
-import {onMounted, getCurrentInstance} from "vue";
+import {onMounted, getCurrentInstance, render, inject} from "vue";
 
 const props = defineProps({
-  key: {
+  name: {
     type: String,
     required: true,
   },
@@ -22,10 +22,17 @@ const props = defineProps({
   }
 })
 
+const registerColumn = inject('registerColumn');
 
 onMounted(() => {
-  getCurrentInstance().parent.registerColumn({...props})
+  if (registerColumn) {
+    registerColumn({ ...props });
+  } else {
+    console.error("Failed to inject registerColumn, dont use TableCol outside Table");
+  }
 })
 
-
 </script>
+
+<template>
+</template>

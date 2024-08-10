@@ -16,7 +16,7 @@ function timeout(ms) {
 
 
 const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDirection}) => {
-  await timeout(1000)
+  await timeout(2000)
   return {
     rows: [
       {
@@ -55,9 +55,12 @@ const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDi
         email: 'sharklotte@shark.empire',
         displayName: 'Sharklotte (shark)'
       }
-    ],
+    ].filter(row => {
+      console.log(searchText)
+      if(searchText === "") return true
+      return row.username.includes(searchText)
+    }),
     totalCount: 27,
-
   }
 }
 
@@ -106,15 +109,14 @@ const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDi
         </div>
       </div>
 
-
-
-      <Table key-prop="id" :data-source="fetchTableData" title="repudiare eros conceptam populo vel">
-        <TableCol key="username" header="User Name" :can-mark="true" :can-sort="true" />
-        <TableCol key="email" header="Email" :can-mark="true" />
+      <Table key-prop="id" :data-source="fetchTableData" title="repudiare eros conceptam populo vel" :auto-focus-search="true">
+        <TableCol name="username" header="User Name" :can-mark="true" :can-sort="true" />
+        <TableCol name="email" header="Email" :can-mark="true" />
         <template #email="{row, markText}">
           <a href="mailto:{{row.email}}" v-html="markText(row.email)" />
         </template>
       </Table>
+      
       <div class="border border-slate-200 rounded-md overflow-hidden py-4">
         <div class="flex justify-between px-4 mb-2">
           <p>repudiare eros conceptam populo vel</p>

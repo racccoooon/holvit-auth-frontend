@@ -1,5 +1,7 @@
 <script setup>
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted, provide, ref, watch} from "vue";
+import LoadingBar from "../LoadingBar.vue";
+import debounce from 'lodash/debounce';
 
 const props = defineProps({
   dataSource: {
@@ -37,68 +39,102 @@ const props = defineProps({
 });
 
 const columns = ref([]);
+const isLoading = ref(false);
 
 const markText = (text) => text; // TODO
 
 const totalCount = ref(0);
-
 const rows = ref([]);
 
 const searchInputRef = ref(null)
-
 
 const registerColumn = (col) => {
   columns.value.push(col)
 }
 
+provide('registerColumn', registerColumn);
 
-defineExpose({
-  registerColumn
+const searchText = ref('');
+watch(searchText, () => {
+  loadDatasourceDebounced();
+});
+
+const currentPage = ref(1);
+watch(currentPage, () => {
+  loadDatasourceDebounced();
 })
+
+const pageSize = ref(props.pageSize);
+watch(pageSize, () => {
+  currentPage.value = 1;
+  loadDatasourceDebounced();
+});
+
+const loadDatasource = async () => {
+  isLoading.value = true
+  
+  const data = await props.dataSource({
+    currentPage: currentPage.value,
+    pageSize: pageSize.value,
+    searchText: searchText.value,
+    sortBy: null,
+    sortDirection: "asc",
+  })//TODO: handle errors
+
+  rows.value = data.rows;
+  totalCount.value = data.totalCount;
+  
+  isLoading.value = false
+  await nextTick();
+}
+
+const debouncedDataSource = debounce(async () => {
+  await loadDatasource()
+}, 1000)
+
+const loadDatasourceDebounced = async () => {
+  isLoading.value = true
+  await debouncedDataSource()//TODO: handle errors
+}
 
 onMounted(() => {
   if (props.autoFocusSearch && props.showSearch) {
     nextTick(() => searchInputRef.value.focus());
   }
-
-  props.dataSource({
-    currentPage: 1,
-    pageSize: 10,
-    searchText: "",
-    sortBy: null,
-    sortDirection: "asc",
-  }).then(data => {
-    rows.value = data.rows;
-    totalCount.value = data.totalCount;
-  });
-
+  
+  loadDatasource()
 });
 </script>
 
 <template>
+  <slot></slot>
   <div class="border border-slate-200 rounded-md overflow-hidden py-4">
-    <div class="flex items-center px-4 mb-2">
+    <div class="flex items-center px-4">
       <p v-if="title !== null" v-text="title"/>
       <input ref="searchInputRef"
              v-if="showSearch"
+             v-model="searchText"
              type="text"
              class=" ml-auto border border-slate-200 px-4 py-2 rounded-lg focus:outline outline-2 outline-fuchsia-700"
              :placeholder="searchPlaceholder"
              aria-label="User search"/>
     </div>
+
+    <LoadingBar class="my-2" :isLoading="isLoading"/>
+    
     <table class="w-full">
       <thead class="uppercase">
       <tr>
-        <th scope="col" class="px-4 text-left text-fuchsia-950" v-for="column in columns" :key="column.key">
+        <th scope="col" class="px-4 text-left text-fuchsia-950" v-for="column in columns" :key="column.name">
           {{ column.header }}
         </th>
       </tr>
       </thead>
       <tbody>
       <tr class="cursor-pointer hover:bg-slate-50 transition-all" v-for="(row, rowIndex) in rows" :key="row[keyProp]">
-        <td class="px-4 py-2 text-left" v-for="column in columns" :key="column.key">
-          <slot :name="column.key" :row="row" :row-index="rowIndex" :mark-text="markText">
-            {{ row[column.key] }}
+        <td class="px-4 py-2 text-left" v-for="column in columns" :key="column.name">
+          <slot :name="column.name" :row="row" :row-index="rowIndex" :mark-text="markText">
+            {{ row[column.name] }}
           </slot>
         </td>
       </tr>
