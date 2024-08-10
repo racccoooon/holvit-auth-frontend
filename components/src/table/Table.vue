@@ -1,6 +1,7 @@
 <script setup>
 import {nextTick, onMounted, provide, ref, watch} from "vue";
 import LoadingBar from "../LoadingBar.vue";
+import Box from "../Box.vue"
 import debounce from 'lodash/debounce';
 
 const props = defineProps({
@@ -72,7 +73,7 @@ watch(pageSize, () => {
 
 const loadDatasource = async () => {
   isLoading.value = true
-  
+
   const data = await props.dataSource({
     currentPage: currentPage.value,
     pageSize: pageSize.value,
@@ -83,7 +84,7 @@ const loadDatasource = async () => {
 
   rows.value = data.rows;
   totalCount.value = data.totalCount;
-  
+
   isLoading.value = false
   await nextTick();
 }
@@ -101,14 +102,14 @@ onMounted(() => {
   if (props.autoFocusSearch && props.showSearch) {
     nextTick(() => searchInputRef.value.focus());
   }
-  
+
   loadDatasource()
 });
 </script>
 
 <template>
   <slot></slot>
-  <div class="border border-slate-200 rounded-md overflow-hidden py-4">
+  <Box>
     <div class="flex items-center px-4">
       <p v-if="title !== null" v-text="title"/>
       <input ref="searchInputRef"
@@ -121,7 +122,7 @@ onMounted(() => {
     </div>
 
     <LoadingBar class="my-2" :isLoading="isLoading"/>
-    
+
     <table class="w-full">
       <thead class="uppercase">
       <tr>
@@ -164,7 +165,7 @@ onMounted(() => {
             class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">&raquo;</span>
       </div>
     </div>
-  </div>
+  </Box>
 </template>
 
 <style scoped>
