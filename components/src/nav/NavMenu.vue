@@ -1,5 +1,6 @@
 <script setup>
 import {computed, ref} from "vue";
+import Dropdown from "../Dropdown.vue";
 
 const props = defineProps({
   appName: {
@@ -13,11 +14,20 @@ const burgerOpen = ref(false);
 const toggleBurger = () => burgerOpen.value = !burgerOpen.value
 
 const menuClass = computed(() => ({'hidden': !burgerOpen.value}))
+const containerClass = computed(() => ({'h-full': burgerOpen.value}))
+
+const realms = [
+  {value: 1, text: "Master"},
+  {value: 2, text: "Foobar"},
+]
+
+const selectedRealm = ref(1);
+
 
 </script>
 
 <template>
-  <div class="w-full lg:w-[280px] flex-shrink-0 flex flex-col border-r border-slate-200">
+  <div class="fixed lg:static z-20 w-full lg:w-[280px] flex-shrink-0 flex flex-col border-r border-slate-200" :class="containerClass">
     <div class="flex p-4 gap-4 bg-slate-50 font-bold border-b border-slate-200">
       <div class="lg:hidden cursor-pointer" @click="toggleBurger">
         BURGER
@@ -25,10 +35,9 @@ const menuClass = computed(() => ({'hidden': !burgerOpen.value}))
       <div class="" v-text="appName"></div>
       <div class="ml-auto">LOGOUT</div>
     </div>
-    <div class="flex lg:flex flex-col fixed lg:static w-full h-full bg-gradient-to-b bg-slate-50" :class="menuClass">
+    <div class="flex lg:flex flex-col w-full h-full bg-gradient-to-b bg-slate-50" :class="menuClass">
       <div class="p-4">
-        <div class="px-4 py-2 bg-slate-100 rounded-lg flex justify-between hover:bg-slate-200 cursor-pointer transition-all hover:shadow">
-          REALM: MASTER <span>v</span></div>
+        <Dropdown :items="realms" v-model="selectedRealm" class="w-full" />
       </div>
       <hr class=""/>
       <menu class="flex flex-col p-4 gap-2">

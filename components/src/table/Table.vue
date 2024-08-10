@@ -1,10 +1,11 @@
 <script setup>
-import {nextTick, onMounted, provide, ref, watch} from "vue";
+import {computed, nextTick, onMounted, provide, ref, watch} from "vue";
 import LoadingBar from "../LoadingBar.vue";
 import Box from "../Box.vue"
 import debounce from 'lodash/debounce';
 import Marker from "../Marker.vue";
 import {markText as _markText} from "../util";
+import Dropdown from "../Dropdown.vue";
 
 const props = defineProps({
   dataSource: {
@@ -73,6 +74,8 @@ watch(pageSize, () => {
   loadDatasourceDebounced();
 });
 
+const pageSizesForDropdown = computed(() => props.pageSizes.map(x => ({value: x, text: `${x} / page`})));
+
 const loadDatasource = async () => {
   isLoading.value = true
 
@@ -111,7 +114,7 @@ onMounted(() => {
 
 <template>
   <slot></slot>
-  <Box>
+  <Box class="overflow-x-auto">
     <div class="flex items-center px-4">
       <p v-if="title !== null" v-text="title"/>
       <input ref="searchInputRef"
@@ -145,26 +148,22 @@ onMounted(() => {
     </table>
     <div class="px-4 mt-4 flex justify-between">
       <div>
-        <div
-            class="px-4 py-2 bg-slate-100 rounded-lg inline-flex justify-between hover:bg-slate-200 cursor-pointer transition-all text-slate-700 hover:shadow">
-          20 / page
-          <span class="ml-3">v</span>
-        </div>
+        <Dropdown :items="pageSizesForDropdown" v-model="pageSize"/>
       </div>
       <div class="flex gap-1">
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">&laquo;</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&laquo;</span>
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">1</span>
-        <span class="block cursor-pointer rounded px-4 content-center border bg-slate-100 font-bold">2</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">1</span>
+        <span class="block rounded px-4 content-center cursor-default border border-slate-200 font-bold">2</span>
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">...</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">...</span>
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">4</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">4</span>
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">5</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">5</span>
         <span
-            class="block cursor-pointer rounded px-4 content-center border border-slate-100 hover:bg-slate-200 hover:border-slate-200 transition-all hover:shadow">&raquo;</span>
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&raquo;</span>
       </div>
     </div>
   </Box>
