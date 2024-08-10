@@ -3,6 +3,8 @@ import {nextTick, onMounted, provide, ref, watch} from "vue";
 import LoadingBar from "../LoadingBar.vue";
 import Box from "../Box.vue"
 import debounce from 'lodash/debounce';
+import Marker from "../Marker.vue";
+import {markText as _markText} from "../util";
 
 const props = defineProps({
   dataSource: {
@@ -42,7 +44,7 @@ const props = defineProps({
 const columns = ref([]);
 const isLoading = ref(false);
 
-const markText = (text) => text; // TODO
+const markText = (text) => _markText(text, searchText.value);
 
 const totalCount = ref(0);
 const rows = ref([]);
@@ -135,7 +137,7 @@ onMounted(() => {
       <tr class="cursor-pointer hover:bg-slate-50 transition-all" v-for="(row, rowIndex) in rows" :key="row[keyProp]">
         <td class="px-4 py-2 text-left" v-for="column in columns" :key="column.name">
           <slot :name="column.name" :row="row" :row-index="rowIndex" :mark-text="markText">
-            {{ row[column.name] }}
+            <Marker :text="String(row[column.name])" :search-text="searchText"/>
           </slot>
         </td>
       </tr>
