@@ -89,7 +89,7 @@ const submit = async () => {
         type="submit"
         text="Change password"
         color="primary"
-        size="large"
+        size="lg"
         :click-effect="true"
         :disabled="state.submitting"
         ref="submitButton"

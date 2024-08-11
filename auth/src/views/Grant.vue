@@ -78,7 +78,7 @@ const scrollDown = () => {
           type="submit"
           text="Gib"
           color="primary"
-          size="large"
+          size="lg"
           :click-effect="true"
       />
       <Button
@@ -86,7 +86,7 @@ const scrollDown = () => {
           :href="urls.refuse"
           text="No thank"
           color="danger"
-          size="large"
+          size="lg"
           :click-effect="true"
       />
     </div>
