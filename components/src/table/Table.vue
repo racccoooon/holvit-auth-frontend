@@ -54,6 +54,7 @@ const searchInputRef = ref(null)
 
 const searchText = ref('');
 watch(searchText, () => {
+  currentPage.value = 1;
   loadDatasourceDebounced();
 });
 
