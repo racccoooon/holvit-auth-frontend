@@ -9,7 +9,7 @@ import {NavMenu} from 'holvit-components'
 
     </NavMenu>
 
-    <div class="overflow-auto p-8 w-full" id="content">
+    <div class="mt-14 lg:mt-0 overflow-auto p-8 w-full" id="content">
       <router-view v-slot="{ Component }"></router-view>
     </div>
   </div>
