@@ -1,7 +1,8 @@
 <script setup>
 import {Button, Icon, Table, TableCol, PageHeader} from 'holvit-components'
+import {drop, take} from "lodash";
 
-const ellipsis_clicked = (id) => alert(`clicked on ${id}`)
+const ellipsisClicked = (id) => alert(`clicked on ${id}`)
 
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -10,7 +11,7 @@ function timeout(ms) {
 const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDirection}) => {
   await timeout(2000)
   return {
-    rows: [
+    rows: take(drop([
       {
         id: '27014c4e-c341-446c-a84a-b0890ef33e00',
         username: 'gwenya',
@@ -46,14 +47,17 @@ const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDi
         username: 'sharklotte',
         email: 'sharklotte@shark.empire',
         displayName: 'Sharklotte (shark)'
-      }
+      },
     ].filter(row => {
-      console.log(searchText)
       if (searchText === "") return true
       return row.username.includes(searchText) || row.displayName.includes(searchText) || row.email.includes(searchText)
-    }),
-    totalCount: 27,
+    }), (currentPage - 1) * pageSize), pageSize),
+    totalCount: 6,
   }
+}
+
+const onRowClicked = (row) => {
+  alert(row.id)
 }
 
 
@@ -66,18 +70,19 @@ const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDi
     </PageHeader>
 
     <Table key-prop="id" :data-source="fetchTableData" title="repudiare eros conceptam populo vel"
-           :auto-focus-search="true">
+           :auto-focus-search="true"
+          @row-clicked="onRowClicked">
       <TableCol name="username" header="User Name"/>
       <TableCol name="displayName" header="Display Name"/>
       <TableCol name="email" header="Email" :can-sort="false"/>
       <TableCol name="actions" header="" :can-mark="false" :can-sort="false"/>
       <template #email="{row, markText}">
-        <a href="mailto:{{row.email}}" v-html="markText(row.email)"/>
+        <a href="mailto:{{row.email}}" @click.stop v-html="markText(row.email)"/>
       </template>
       <template #actions="{row}">
         <Icon name="ellipsis-vertical" size="md"
               class="cursor-pointer border border-slate-200 hover:bg-slate-200 rounded hover:shadow p-1"
-              aria-role="button" @click="() => ellipsis_clicked(row.id)"/>
+              aria-role="button" @click.stop="() => ellipsisClicked(row.id)"/>
       </template>
     </Table>
 
@@ -109,7 +114,7 @@ const fetchTableData = async ({currentPage, pageSize, searchText, sortBy, sortDi
           <td class="px-4 py-2 text-left">
             <Icon name="ellipsis-vertical" size="md"
                   class="cursor-pointer border border-slate-200 hover:bg-slate-200 rounded hover:shadow p-1"
-                  aria-role="button" @click="ellipsis_clicked"/>
+                  aria-role="button" @click="ellipsisClicked"/>
           </td>
         </tr>
         </tbody>

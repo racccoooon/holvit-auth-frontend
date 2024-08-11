@@ -52,12 +52,6 @@ const rows = ref([]);
 
 const searchInputRef = ref(null)
 
-const registerColumn = (col) => {
-  columns.value.push(col)
-}
-
-provide('registerColumn', registerColumn);
-
 const searchText = ref('');
 watch(searchText, () => {
   loadDatasourceDebounced();
@@ -75,6 +69,30 @@ watch(pageSize, () => {
 });
 
 const pageSizesForDropdown = computed(() => props.pageSizes.map(x => ({value: x, text: `${x} / page`})));
+
+const pagesForDropdown = computed(() => {
+  let count = totalCount.value;
+  if(count === 0) count = 1;
+  return Array.from({length: Math.ceil(count / pageSize.value)}, (_, i) => i+1).map(x => ({value: x, text: `${x}`}))
+});
+
+const firstPage = () => {
+  currentPage.value = 1
+}
+
+const previousPage = () => {
+  if (currentPage.value > 1) currentPage.value = currentPage.value-1;
+}
+
+const nextPage = () => {
+  let pageCount = Math.ceil(totalCount.value / pageSize.value);
+  if (pageCount > currentPage.value) currentPage.value = currentPage.value+1;
+}
+
+const lastPage = () => {
+  let pageCount = Math.ceil(totalCount.value / pageSize.value);
+  if (pageCount > 1) currentPage.value = pageCount;
+}
 
 const loadDatasource = async () => {
   isLoading.value = true
@@ -103,6 +121,18 @@ const loadDatasourceDebounced = async () => {
   await debouncedDataSource()//TODO: handle errors
 }
 
+const onRowClicked = (row) => {
+  emit('row-clicked', row)
+}
+
+const emit = defineEmits(['row-clicked'])
+
+const registerColumn = (col) => {
+  columns.value.push(col)
+}
+
+provide('registerColumn', registerColumn);
+
 onMounted(() => {
   if (props.autoFocusSearch && props.showSearch) {
     nextTick(() => searchInputRef.value.focus());
@@ -115,7 +145,7 @@ onMounted(() => {
 <template>
   <slot></slot>
   <Box class="overflow-x-auto">
-    <div class="flex items-center px-4">
+    <div class="flex flex-wrap gap-4 items-center px-4">
       <p v-if="title !== null" v-text="title"/>
       <input ref="searchInputRef"
              v-if="showSearch"
@@ -137,7 +167,7 @@ onMounted(() => {
       </tr>
       </thead>
       <tbody>
-      <tr class="cursor-pointer hover:bg-slate-50 transition-all" v-for="(row, rowIndex) in rows" :key="row[keyProp]">
+      <tr class="cursor-pointer hover:bg-slate-50 transition-all" v-for="(row, rowIndex) in rows" :key="row[keyProp]" @click="onRowClicked(row)">
         <td class="px-4 py-2 text-left" v-for="column in columns" :key="column.name">
           <slot :name="column.name" :row="row" :row-index="rowIndex" :mark-text="markText">
             <Marker :text="String(row[column.name])" :search-text="searchText"/>
@@ -146,23 +176,19 @@ onMounted(() => {
       </tr>
       </tbody>
     </table>
-    <div class="px-4 mt-4 flex justify-between">
+    <div class="px-4 mt-4 flex justify-between flex-wrap gap-4">
       <div>
         <Dropdown :items="pageSizesForDropdown" v-model="pageSize"/>
       </div>
       <div class="flex gap-1">
-        <span
+        <span @click="firstPage"
             class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&laquo;</span>
-        <span
-            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">1</span>
-        <span class="block rounded px-4 content-center cursor-default border border-slate-200 font-bold">2</span>
-        <span
-            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">...</span>
-        <span
-            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">4</span>
-        <span
-            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">5</span>
-        <span
+        <span  @click="previousPage"
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&lsaquo;</span>
+        <Dropdown :items="pagesForDropdown" v-model="currentPage"/>
+        <span @click="nextPage"
+            class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&rsaquo;</span>
+        <span @click="lastPage"
             class="block cursor-pointer rounded px-4 content-center bg-slate-100 hover:bg-slate-200 transition-all hover:shadow">&raquo;</span>
       </div>
     </div>
