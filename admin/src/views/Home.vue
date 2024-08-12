@@ -1,8 +1,6 @@
 <script setup>
 import {Button, Icon, Table, TableCol, PageHeader} from 'holvit-components'
 import {drop, take} from "lodash";
-import {UserManager} from "oidc-client-ts";
-import * as Oidc from "oidc-client-ts";
 
 const ellipsisClicked = (id) => alert(`clicked on ${id}`)
 
@@ -63,41 +61,16 @@ const onRowClicked = (row) => {
   alert(row.id)
 }
 
-
-
-// ###############
-Oidc.Log.setLogger(console);
-const mgr = new UserManager({
-  authority: "http://localhost:8080/oidc/admin",
-  client_id: "holvit_admin",
-  scope: "oidc profile email",
-  redirect_uri: "http://localhost:8080/admin/"
-});
-
-const login = () => {
-  mgr.signinRedirect()
+const action = () => {
+  alert("action!")
 }
 
-const callback = () => {
-  mgr.signinCallback()
-}
-
-const getUser = async () => {
-  console.log(await mgr.getUser())
-}
-
-const logout = () => {
-  mgr.signoutRedirect()
-}
 </script>
 
 <template>
   <div class="flex flex-col gap-4">
     <PageHeader title="Hello World!" sub-title="Here you can manage all your worlds and hello them">
-      <Button text="Login" color="primary" size="sm" @click="login"/>
-      <Button text="Callback" color="primary" size="sm" @click="callback"/>
-      <Button text="LogUser" color="primary" size="sm" @click="getUser"/>
-      <Button text="Logout" color="primary" size="sm" @click="logout"/>
+      <Button text="Action" color="primary" size="sm" @click="action"/>
     </PageHeader>
 
     <Table key-prop="id" :data-source="fetchTableData" title="repudiare eros conceptam populo vel"
