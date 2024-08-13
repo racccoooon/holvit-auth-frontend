@@ -25,7 +25,7 @@ const props = defineProps({
     type: String,
     required: false,
     default: 'md',
-    validator: value => Object.values(sizes).includes(value),
+    validator: value => Object.keys(sizes).includes(value),
   }
 })
 

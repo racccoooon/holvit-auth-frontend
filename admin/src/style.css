@@ -5,3 +5,8 @@
 html, body, #app {
     @apply h-full text-slate-950;
 }
+
+
+:focus-visible {
+    outline: 2px solid theme('colors.fuchsia.700');
+}

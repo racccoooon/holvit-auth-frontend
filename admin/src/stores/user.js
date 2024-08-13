@@ -6,7 +6,7 @@ import router from "../router";
 const mgr = new UserManager({
     authority: "http://localhost:8080/oidc/admin",
     client_id: "holvit_admin",
-    scope: "oidc profile email",
+    scope: "openid profile email",
     redirect_uri: "http://localhost:8080/admin/auth"
 });
 
@@ -15,15 +15,14 @@ export const useUserStore = defineStore("user", {
         user: null,
     }),
     actions: {
-        async login() {
+        async login(destination) {
             const user = await mgr.getUser();
             if (user !== null) {
                 this.user = user;
             } else {
-                const currentRoute = router.currentRoute.value;
                 await mgr.signinRedirect({
                     state: {
-                        route: currentRoute,
+                        destination: destination,
                     }
                 });
             }
@@ -41,5 +40,5 @@ export async function handleLoginCallback() {
     const user = await mgr.signinRedirectCallback();
     const store = useUserStore();
     store.setUser(user);
-    return user.state.route;
+    return user.state.destination;
 }

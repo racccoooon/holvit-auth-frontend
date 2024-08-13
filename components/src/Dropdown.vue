@@ -13,7 +13,7 @@ const model = defineModel({
 
 <template>
   <select class="appearance-none px-4 py-2 bg-slate-100 rounded-lg 
-  hover:bg-slate-200 cursor-pointer transition-all hover:shadow focus:outline-2 outline-fuchsia-900" v-model="model"
+  hover:bg-slate-200 cursor-pointer transition-all hover:shadow" v-model="model"
   v-bind="$attrs"
   >
     <option v-for="item in items" :value="item.value" :key="item.value">{{ item.text }}</option>

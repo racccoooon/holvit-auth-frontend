@@ -9,7 +9,27 @@ import Icon from "./Icon.vue";
 import Table from "./table/Table.vue";
 import TableCol from "./table/TableCol.vue";
 import NavMenu from "./nav/NavMenu.vue";
+import NavItem from "./nav/NavItem.vue";
+import NavSection from "./nav/NavSection.vue";
 import PageHeader from "./PageHeader.vue";
 import Box from "./Box.vue";
+import Dropdown from "./Dropdown.vue";
 
-export {Button, Checkbox, Heading, TextInput, BigCheckList, Alert, Spinner, Icon, Table, TableCol, NavMenu, PageHeader, Box};
+export {
+    Button,
+    Checkbox,
+    Heading,
+    TextInput,
+    BigCheckList,
+    Alert,
+    Spinner,
+    Icon,
+    Table,
+    TableCol,
+    NavMenu,
+    NavItem,
+    NavSection,
+    PageHeader,
+    Box,
+    Dropdown,
+};
