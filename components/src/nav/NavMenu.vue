@@ -42,7 +42,7 @@ defineExpose({
 
 <template>
   <div class="fixed lg:static z-20 w-full lg:w-[280px] flex-shrink-0 flex flex-col border-r
-  border-slate-200 bg-slate-100/25 backdrop-blur transition-all" :class="containerClass" @click="menuClick" ref="containerEl">
+  border-slate-200 bg-slate-100/10 backdrop-blur transition-all" :class="containerClass" @click="menuClick" ref="containerEl">
     <div class="flex p-4 gap-4 bg-slate-50 font-bold border-b border-slate-200">
       <div class="lg:hidden cursor-pointer" @click="toggleBurger">
         BURGER

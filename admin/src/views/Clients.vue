@@ -2,7 +2,7 @@
 import {PageHeader} from "holvit-components";
 
 const props = defineProps({
-  realmId: {
+  realmName: {
     type: String,
     required: true,
   }

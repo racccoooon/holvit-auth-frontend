@@ -1,14 +1,20 @@
 <script setup>
 import {Icon, PageHeader, Table, TableCol} from "holvit-components";
 import {drop, take} from "lodash";
+import {useFindUsers} from "../api/users.js";
+import {useUserStore} from "../stores/user.js";
+import {useRealmStore} from "../stores/realms.js";
 
 const props = defineProps({
-  realmId: {
+  realmName: {
     type: String,
     required: true,
   }
 });
 
+const userStore = useUserStore();
+
+const findUsers = useFindUsers(props.realmName, userStore.user.access_token)
 
 const ellipsisClicked = (id) => alert(`clicked on ${id}`)
 
@@ -81,7 +87,7 @@ const action = () => {
     <PageHeader title="Users" sub-title="Here you can manage all your users">
     </PageHeader>
 
-    <Table key-prop="id" :data-source="fetchTableData" title=""
+    <Table key-prop="id" :data-source="findUsers" title=""
            :auto-focus-search="true"
            searchPlaceholder="Search users..."
            @row-clicked="onRowClicked">

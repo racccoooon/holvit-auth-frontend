@@ -14,6 +14,7 @@ import NavSection from "./nav/NavSection.vue";
 import PageHeader from "./PageHeader.vue";
 import Box from "./Box.vue";
 import Dropdown from "./Dropdown.vue";
+import Modal from "./modal/Modal.vue";
 
 export {
     Button,
@@ -32,4 +33,5 @@ export {
     PageHeader,
     Box,
     Dropdown,
+    Modal,
 };

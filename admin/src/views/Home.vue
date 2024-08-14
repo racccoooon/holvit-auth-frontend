@@ -1,7 +1,8 @@
 <script setup>
-import {Button, PageHeader, Box, Heading} from 'holvit-components'
+import {Button, PageHeader, Box, Heading, Modal} from 'holvit-components'
 import {useRealmStore} from "../stores/realms.js";
 import {useRouter} from "vue-router";
+import {ref} from "vue";
 
 const realmStore = useRealmStore();
 
@@ -9,6 +10,12 @@ const router = useRouter();
 
 const openRealm = id => {
   router.push({path: `/${id}/` })
+}
+
+const modal = ref(null);
+
+const action = () => {
+  modal.value.open();
 }
 
 </script>
@@ -28,6 +35,7 @@ const openRealm = id => {
       </Box>
     </div>
 
+    <Modal ref="modal"/>
   </div>
 </template>
 
