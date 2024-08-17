@@ -15,7 +15,8 @@
     "pinia": "^2.2.1",
     "raccoon-eventhub": "^1.0.1",
     "vue": "^3.4.35",
-    "vue-router": "^4.4.0"
+    "vue-router": "^4.4.0",
+    "@vueuse/core": "^10.11.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",

@@ -2,8 +2,6 @@
 import {Icon, PageHeader, Table, TableCol} from "holvit-components";
 import {drop, take} from "lodash";
 import {useFindUsers} from "../api/users.js";
-import {useUserStore} from "../stores/user.js";
-import {useRealmStore} from "../stores/realms.js";
 
 const props = defineProps({
   realmName: {
@@ -12,9 +10,7 @@ const props = defineProps({
   }
 });
 
-const userStore = useUserStore();
-
-const findUsers = useFindUsers(props.realmName, userStore.user.access_token)
+const findUsers = useFindUsers(props.realmName)
 
 const ellipsisClicked = (id) => alert(`clicked on ${id}`)
 

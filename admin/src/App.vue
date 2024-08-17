@@ -1,17 +1,16 @@
 <script setup>
-import {NavMenu, NavItem, NavSection, Spinner, Dropdown, Button, Modal} from 'holvit-components'
-import {useUserStore} from "./stores/user.js";
-import {computed, onMounted, ref} from "vue";
+import {NavMenu, NavItem, NavSection, Spinner, Dropdown, Button} from 'holvit-components'
+import {computed, ref} from "vue";
 import {useRealmStore} from "./stores/realms.js";
 import {useRoute, useRouter} from "vue-router";
 import eventhub from "raccoon-eventhub";
 import {NavigationEvent} from "./events/NavigationEvent.js";
+import {getUser} from "./stores/user.js";
 
 const navMenu = ref(null)
 
-const userStore = useUserStore();
-
-const isLoggedIn = computed(() => userStore.user !== null);
+const isLoggedIn = ref(false);
+getUser().then(user => isLoggedIn.value = user !== null);
 
 const realmStore = useRealmStore();
 
@@ -27,7 +26,7 @@ const changeRealm = e => {
 }
 
 eventhub.subscribe(NavigationEvent, evt => {
-  navMenu.value.closeBurger()
+  navMenu.value.closeBurger();
 })
 
 </script>

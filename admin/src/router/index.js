@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import {nextTick} from "vue";
-import {handleLoginCallback, useUserStore} from "../stores/user.js";
+import {handleLoginCallback, login} from "../stores/user.js";
 import eventhub from "raccoon-eventhub";
 import {NavigationEvent} from "../events/NavigationEvent.js";
 
@@ -69,8 +69,7 @@ const router = createRouter({
 });
 router.beforeEach(async (to, from) => {
     if (to.name !== 'auth') {
-        const userStore = useUserStore();
-        await userStore.login(to);
+        await login(to);
     }
 })
 router.afterEach((to, from) => {
