@@ -14,6 +14,9 @@ html, body, #app {
     @apply flex flex-col justify-center;
     @apply sm:grid place-content-center sm:gap-8 sm:p-8;
     @apply bg-gray-50 sm:bg-gradient-to-r from-pink-800 to-purple-800 text-fuchsia-950;
+    @media screen(sm) {
+        background-image: linear-gradient(in oklch to right, var(--tw-gradient-stops));
+    }
 }
 
 #app > .auth-box {
