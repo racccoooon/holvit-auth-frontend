@@ -4,16 +4,19 @@ export function useId() {
     return `id${id++}`
 }
 
-export function markText(text, searchText) {
+export function markText(text, searches) {
     text = escape(text);
     
-    if (!searchText) {
+    if (!searches || searches.length === 0) {
         return text;
     }
-    
-    searchText = escape(searchText);
 
-    const escapedTerm = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regexPattern = new RegExp(`(${escapedTerm})`, 'gi');
+    searches = searches.map(escape).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+    const regexPattern = new RegExp('(' + searches.join('|') + ')', 'gi')
     return text.replace(regexPattern, '<mark>$1</mark>');
+}
+
+export function splitSearch(search) {
+    return search.split(' ').filter(x => x.length > 0)
 }

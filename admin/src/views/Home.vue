@@ -25,7 +25,7 @@ const action = () => {
     <PageHeader title="Hello World!" sub-title="Here you can manage all your worlds and hello them">
       <Button text="Action" color="primary" size="sm" @click="action"/>
     </PageHeader>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4" v-if="realmStore.realms !== null">
       <Box v-for="realm in realmStore.realms" class="p-4 cursor-pointer hover:shadow" @click="() => openRealm(realm.id)">
         <Heading type="h2">{{realm.name}}</Heading>
         <p>

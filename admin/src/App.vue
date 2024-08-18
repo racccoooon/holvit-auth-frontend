@@ -33,9 +33,9 @@ eventhub.subscribe(NavigationEvent, evt => {
 
 <template>
   <div class="h-full lg:flex flex-1 overflow-hidden" v-if="isLoggedIn">
-    <NavMenu ref="navMenu" app-name="Holvit Admin">
+    <NavMenu ref="navMenu" app-name="Holvit Admin" v-if="realmStore.realms !== null">
       <NavSection v-if="!realmName">
-        <NavItem :name="realm.name" :route="{name: 'realm', params: {realmName: realm.id}}"
+        <NavItem :name="realm.name" :route="{name: 'realm', params: {realmName: realm.name}}"
                  v-for="realm in realmStore.realms" :key="realm.id"/>
       </NavSection>
       <NavSection v-if="realmName">

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-md overflow-hidden py-4" v-bind="$attrs">
+  <div class="border border-slate-200 rounded-md py-4">
     <slot/>
   </div>
 </template>

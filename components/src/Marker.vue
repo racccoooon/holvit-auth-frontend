@@ -7,13 +7,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  searchText: {
-    type: String,
+  searches: {
+    type: Array,
   },
 })
 
 const markedText = computed(() => {
-  return markText(props.text, props.searchText)
+  return markText(props.text, props.searches)
 })
 </script>
 

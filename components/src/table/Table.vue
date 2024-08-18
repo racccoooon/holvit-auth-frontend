@@ -4,7 +4,7 @@ import LoadingBar from "../LoadingBar.vue";
 import Box from "../Box.vue"
 import debounce from 'lodash/debounce';
 import Marker from "../Marker.vue";
-import {markText as _markText} from "../util";
+import {markText as _markText, splitSearch} from "../util";
 import Dropdown from "../Dropdown.vue";
 
 const props = defineProps({
@@ -45,7 +45,6 @@ const props = defineProps({
 const columns = ref([]);
 const isLoading = ref(false);
 
-const markText = (text) => _markText(text, searchText.value);
 
 const totalCount = ref(0);
 const rows = ref([]);
@@ -53,10 +52,14 @@ const rows = ref([]);
 const searchInputRef = ref(null)
 
 const searchText = ref('');
+const searches = ref([]);
 watch(searchText, () => {
+  searches.value = splitSearch(searchText.value);
   currentPage.value = 1;
   loadDatasourceDebounced();
 });
+
+const markText = (text) => _markText(text, searches.value);
 
 const currentPage = ref(1);
 watch(currentPage, () => {
@@ -115,7 +118,7 @@ const loadDatasource = async () => {
 
 const debouncedDataSource = debounce(async () => {
   await loadDatasource()
-}, 1000)
+}, 250, {leading: true})
 
 const loadDatasourceDebounced = async () => {
   isLoading.value = true
@@ -171,7 +174,7 @@ onMounted(() => {
       <tr class="cursor-pointer hover:bg-slate-50 transition-all" v-for="(row, rowIndex) in rows" :key="row[keyProp]" @click="onRowClicked(row)">
         <td class="px-4 py-2 text-left" v-for="column in columns" :key="column.name">
           <slot :name="column.name" :row="row" :row-index="rowIndex" :mark-text="markText">
-            <Marker :text="String(row[column.name])" :search-text="searchText"/>
+            <Marker :text="String(row[column.name])" :searches="searches"/>
           </slot>
         </td>
       </tr>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col" v-bind="$attrs">
+  <div class="flex flex-col">
     <label v-text="caption" :for="inputId" class="pb-2 font-bold" :class="{disabled: disabled, required: required}"/>
     <input
         :id="inputId"
